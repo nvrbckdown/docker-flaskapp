@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify
 import os
 class ConfigMessage:
-    def __init__(self, log_level, grpc_port, environment, db_url, author, pod):
+    def __init__(self, log_level, grpc_port, environment, db_url, author, pod, node):
         self.log_level = log_level
         self.grpc_port = grpc_port
         self.environment = environment
         self.db_url = db_url
         self.author = author
         self.pod = pod
-
+        self.node = node
+        
 class DomainMessage:
     def __init__(self, endpoint, domain, log_level):
         self.endpoint = endpoint
@@ -34,9 +35,10 @@ def get_config():
     environment = get_env_variable('ENVIRONMENT', 'dev')
     db_url = get_env_variable('DB_URL', 'postgres://admin:supersecret@10.10.10.1:5432/exam-db')
     author = get_env_variable('AUTHOR', 'Not YOU!')
-    pod = get_env_varible('POD_NAME', 'HAVE NO IDEA')
+    pod = get_env_variable('POD_NAME', 'HAVE NO IDEA')
+    node = get_env_variable('NODE_NAME', 'HAVE NO IDEA')
 
-    message = ConfigMessage(log_level, grpc_port, environment, db_url, author, pod)
+    message = ConfigMessage(log_level, grpc_port, environment, db_url, author, pod, node)
     return jsonify(message.__dict__)
 
 @app.route('/check-ingress', methods=['GET'])
